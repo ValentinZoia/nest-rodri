@@ -1,0 +1,14 @@
+version: ''
+services:
+  valenzo_pg:
+    image: postgres:15.1
+    container_name: valenzo_pg
+    restart: always
+    environment:
+      POSTGRES_USER: valenzo
+      POSTGRES_PASSWORD: valenzo123
+      POSTGRES_DB: valenzodb
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432

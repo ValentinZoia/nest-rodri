@@ -17,16 +17,30 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+
+     "typeorm": "cross-env TS_NODE_PROJECT=tsconfig.typeorm.json typeorm-ts-node-commonjs",
+    "migration:generate": "cross-env NODE_ENV=develop TS_NODE_PROJECT=tsconfig.typeorm.json typeorm-ts-node-commonjs -d ./src/config/data-source.ts migration:generate",
+    "migration:run": "cross-env NODE_ENV=develop TS_NODE_PROJECT=tsconfig.typeorm.json typeorm-ts-node-commonjs -d ./src/config/data-source.ts migration:run",
+    "migration:revert": "cross-env NODE_ENV=develop TS_NODE_PROJECT=tsconfig.typeorm.json typeorm-ts-node-commonjs -d ./src/config/data-source.ts migration:revert",
+    "migration:show": "cross-env NODE_ENV=develop TS_NODE_PROJECT=tsconfig.typeorm.json typeorm-ts-node-commonjs -d ./src/config/data-source.ts migration:show",
+    
+    "m:gen": "npm run migration:generate",
+    "m:run": "npm run migration:run",
+    "m:revert": "npm run migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/typeorm": "^11.0.0",
     "morgan": "^1.10.1",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "typeorm": "^0.3.26",
+    "typeorm-naming-strategies": "^4.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
