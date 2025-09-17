@@ -9,5 +9,6 @@ declare namespace NodeJS {
     DB_PASSWORD: string;
     DB_NAME: string;
     SALT_ROUNDS: number;
+    JWT_SECRET: string;
   }
 }

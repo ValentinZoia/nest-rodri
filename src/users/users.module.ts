@@ -18,5 +18,6 @@ import { BcryptAdapter } from 'src/utils/bcrypt.adapter';
       useValue: BcryptAdapter.hash,
     },
   ],
+  exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}

@@ -54,6 +54,29 @@ export class UsersService {
     }
   }
 
+  async findUserBy({
+    key,
+    value,
+  }: {
+    key: keyof CreateUserDto;
+    value: any;
+  }): Promise<UserEntity | null> {
+    try {
+      const user = await this.userRepository
+        .createQueryBuilder('user')
+        .addSelect('user.password')
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        .where({ [key]: value })
+
+        .getOne();
+
+      return user;
+    } catch (error) {
+      // eslint-disable-next-line  @typescript-eslint/no-unsafe-member-access, @typescript-eslint/only-throw-error
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
   async createUser(user: CreateUserDto): Promise<UserEntity> {
     try {
       // 1, Validar que el username - email no este en uso
