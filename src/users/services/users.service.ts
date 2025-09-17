@@ -4,12 +4,16 @@ import { UserEntity } from '../entities/users.entity';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from '../dto/user.dto';
 import { ErrorManager } from 'src/utils/error.manager';
+import { CreateUserProjectDto } from '../dto/userProject.dto';
+import { UsersProjectsEntity } from '../entities/usersProjects.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(UsersProjectsEntity)
+    private readonly userProjectRepository: Repository<UsersProjectsEntity>,
   ) {}
   async findAllUsers(): Promise<UserEntity[]> {
     try {
@@ -25,6 +29,8 @@ export class UsersService {
       const user = await this.userRepository
         .createQueryBuilder('user')
         .where({ id })
+        .leftJoinAndSelect('user.projectsInclude', 'projectsInclude') //incluir la relación en la respuesta
+        .leftJoinAndSelect('projectsInclude.project', 'project') //dentro de la relacion projectInclude, tambien incluir la relacion projecto
         .getOne();
 
       if (!user) {
@@ -42,7 +48,6 @@ export class UsersService {
 
   async createUser(user: CreateUserDto): Promise<UserEntity> {
     try {
-      console.log(user);
       return await this.userRepository.save(user);
     } catch (error) {
       throw new Error(error);
@@ -73,6 +78,15 @@ export class UsersService {
           message: 'User to Delete not found',
         });
       return deletedUser;
+    } catch (error) {
+      // eslint-disable-next-line  @typescript-eslint/no-unsafe-member-access, @typescript-eslint/only-throw-error
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  async relationToProject(createUserProjectDto: CreateUserProjectDto) {
+    try {
+      return await this.userProjectRepository.save(createUserProjectDto);
     } catch (error) {
       // eslint-disable-next-line  @typescript-eslint/no-unsafe-member-access, @typescript-eslint/only-throw-error
       throw ErrorManager.createSignatureError(error.message);

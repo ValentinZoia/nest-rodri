@@ -6,24 +6,22 @@ import {
   Param,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { CreateUserDto, UpdateUserDto } from '../dto/user.dto';
+import { CreateUserProjectDto } from '../dto/userProject.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async findAllUsers(@Query() query: any) {
-    console.log(query);
+  async findAllUsers() {
     return await this.usersService.findAllUsers();
   }
 
   @Get(':id')
   async findUserById(@Param('id') id: string) {
-    console.log(id);
     return await this.usersService.findUserById(id);
   }
 
@@ -37,13 +35,27 @@ export class UsersController {
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    console.log(id);
-    return await this.usersService.updateUser(id, updateUserDto);
+    const result = await this.usersService.updateUser(id, updateUserDto);
+    return {
+      message: 'User updated successfully',
+      result,
+    };
   }
 
   @Delete(':id')
   async deleteUser(@Param('id') id: string) {
-    console.log(id);
-    return await this.usersService.deleteUser(id);
+    const result = await this.usersService.deleteUser(id);
+    return {
+      message: 'User deleted successfully',
+      result,
+    };
+  }
+
+  //User Projects Relation
+  @Post('add-to-project')
+  public async userInProject(
+    @Body() createUserProjectDto: CreateUserProjectDto,
+  ) {
+    return await this.usersService.relationToProject(createUserProjectDto);
   }
 }
