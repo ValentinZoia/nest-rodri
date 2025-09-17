@@ -1,5 +1,6 @@
 import { BaseEntity } from '../../config/base.entity';
 import { ROLES } from '../../constants/roles';
+import { Exclude } from 'class-transformer';
 import { IUser } from '../../interfaces/user.interface';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { UsersProjectsEntity } from './usersProjects.entity';
@@ -21,6 +22,7 @@ export class UserEntity extends BaseEntity implements IUser {
   @Column({ unique: true })
   username: string;
 
+  @Exclude() // no devolver el password en ninguna solicitud
   @Column()
   password: string;
 
