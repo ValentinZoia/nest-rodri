@@ -4,12 +4,20 @@ import { ProjectEntity } from '../entities/project.entity';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { ErrorManager } from 'src/utils/error.manager';
 import { CreateProjectDto, UpdateProjectDto } from '../dtos/project.dto';
+import { UsersProjectsEntity } from 'src/users/entities/usersProjects.entity';
+import { UsersService } from 'src/users/services/users.service';
+import { ACCESS_LEVEL } from 'src/constants/roles';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectRepository(ProjectEntity)
     private readonly projectRepository: Repository<ProjectEntity>,
+
+    @InjectRepository(UsersProjectsEntity)
+    private readonly userProjectRepository: Repository<UsersProjectsEntity>,
+    private readonly usersService: UsersService,
+    // private readonly httpService: HttpCustomService
   ) {}
 
   async findAllProjects(): Promise<ProjectEntity[]> {
@@ -43,13 +51,22 @@ export class ProjectsService {
     }
   }
 
-  async createProject(project: CreateProjectDto): Promise<ProjectEntity> {
+  async createProject(project: CreateProjectDto, userId: string): Promise<any> {
     try {
-      return await this.projectRepository.save(project);
+      const user = await this.usersService.findUserById(userId);
+      const savedProject = await this.projectRepository.save(project);
+      return await this.userProjectRepository.save({
+        accessLevel: ACCESS_LEVEL.OWNER,
+        user: user,
+        project: savedProject,
+      });
     } catch (error) {
       throw new Error(error);
     }
   }
+  // public async listApi() {
+  //   return this.httpService.apiFindAll();
+  // }
 
   async updateProject(
     id: string,
