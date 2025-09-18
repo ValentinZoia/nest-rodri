@@ -1,5 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
-import { PUBLIC_KEY } from 'src/constants/key-decorators';
+import { ROLES_KEY } from 'src/constants/key-decorators';
+import { ROLES } from 'src/constants/roles';
 
 /*
  El SetMetadata es un decorador que permite establecer metadatos en una función.
@@ -9,4 +10,5 @@ import { PUBLIC_KEY } from 'src/constants/key-decorators';
  Retornara true.
 
 */
-export const PublicAccess = () => SetMetadata(PUBLIC_KEY, true);
+export const Roles = (...roles: Array<keyof typeof ROLES>) =>
+  SetMetadata(ROLES_KEY, roles);
