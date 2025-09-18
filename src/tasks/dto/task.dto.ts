@@ -1,5 +1,6 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { STATUS_TASK } from 'src/constants/status-task';
+import { CreateProjectDto } from 'src/projects/dtos/project.dto';
 /*
     -----DECORADORES DE CLASS VALIDATOR-----
     @IsNotEmpty() -> valida que el campo no este vacio
@@ -20,6 +21,7 @@ export class CreateTaskDto {
   @IsNotEmpty()
   @IsString()
   taskDescription: string;
+
   @IsNotEmpty()
   @IsEnum(STATUS_TASK)
   taskStatus: STATUS_TASK;
@@ -27,6 +29,9 @@ export class CreateTaskDto {
   @IsNotEmpty()
   @IsString()
   responsableName: string;
+
+  @IsOptional()
+  project?: CreateProjectDto;
 }
 
 export class UpdateTaskDto {
@@ -44,4 +49,7 @@ export class UpdateTaskDto {
   @IsOptional()
   @IsString()
   responsableName: string;
+
+  @IsOptional()
+  project?: CreateProjectDto;
 }

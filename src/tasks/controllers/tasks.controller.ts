@@ -6,11 +6,17 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { TasksService } from '../services/tasks.service';
 import { CreateTaskDto, UpdateTaskDto } from '../dto/task.dto';
+import { AccessLevelGuard } from 'src/auth/guards/access-level.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { AccessLevel } from 'src/auth/decorators/access-level.decorator';
 
 @Controller('tasks')
+@UseGuards(AuthGuard, RolesGuard, AccessLevelGuard)
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
@@ -24,9 +30,13 @@ export class TasksController {
     return await this.tasksService.findTaskById(id);
   }
 
-  @Post()
-  async createTask(@Body() createTaskDto: CreateTaskDto) {
-    return await this.tasksService.createTask(createTaskDto);
+  @AccessLevel('DEVELOPER')
+  @Post('create/:projectId')
+  async createTask(
+    @Body() createTaskDto: CreateTaskDto,
+    @Param('projectId') projectId: string,
+  ) {
+    return await this.tasksService.createTask(createTaskDto, projectId);
   }
 
   @Put(':id')
