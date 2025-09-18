@@ -1,3 +1,4 @@
+import { TaskEntity } from 'src/tasks/entities/task.entity';
 import { BaseEntity } from '../../config/base.entity';
 import { IProject } from '../../interfaces/project.interface';
 import { UsersProjectsEntity } from '../../users/entities/usersProjects.entity';
@@ -20,4 +21,8 @@ export class ProjectEntity extends BaseEntity implements IProject {
   //Relacion
   @OneToMany(() => UsersProjectsEntity, (userProjects) => userProjects.project)
   usersIncludes: UsersProjectsEntity[];
+
+  // se lee un projecto a muchas tareas
+  @OneToMany(() => TaskEntity, (task) => task.project)
+  tasks: TaskEntity[];
 }
