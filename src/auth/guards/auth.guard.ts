@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { Observable } from 'rxjs';
+
 import { PUBLIC_KEY } from 'src/constants/key-decorators';
 import { UsersService } from 'src/users/services/users.service';
 import { useToken } from 'src/utils/use.token';
@@ -19,9 +19,7 @@ export class AuthGuard implements CanActivate {
     private readonly reflector: Reflector, // leer atributos de decoradores
   ) {}
 
-  async canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext) {
     // 1. Leer Decorador @Public. Si existe, retorna true
     const isPublic = this.reflector.get<boolean>(
       PUBLIC_KEY,
