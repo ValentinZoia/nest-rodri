@@ -1,5 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
 import { ACCESS_LEVEL_KEY } from 'src/constants/key-decorators';
+import { ACCESS_LEVEL } from 'src/constants/roles';
 
 /*
  El SetMetadata es un decorador que permite establecer metadatos en una función.
@@ -9,5 +10,5 @@ import { ACCESS_LEVEL_KEY } from 'src/constants/key-decorators';
  Retornara true.
 
 */
-export const AccessLevel = (level: number) =>
+export const AccessLevel = (level: keyof typeof ACCESS_LEVEL) =>
   SetMetadata(ACCESS_LEVEL_KEY, level);
