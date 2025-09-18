@@ -41,6 +41,7 @@ export class RolesGuard implements CanActivate {
     // 3. Leer el token
     const request = context.switchToHttp().getRequest<Request>();
 
+    // 4. Extraer el rol del usuario logeado
     const { roleUser } = request;
 
     //si soy admin paso siempre padre

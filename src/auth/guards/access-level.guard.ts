@@ -7,13 +7,8 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 
-import {
-  ACCESS_LEVEL_KEY,
-  ADMIN_KEY,
-  PUBLIC_KEY,
-  ROLES_KEY,
-} from 'src/constants/key-decorators';
-import { ROLES } from 'src/constants/roles';
+import { ACCESS_LEVEL_KEY, PUBLIC_KEY } from 'src/constants/key-decorators';
+import { ACCESS_LEVEL, ROLES } from 'src/constants/roles';
 import { UsersService } from 'src/users/services/users.service';
 
 @Injectable()
@@ -32,7 +27,6 @@ export class AccessLevelGuard implements CanActivate {
     if (isPublic) return true;
 
     // 2. Leer Decorador @AccessLevel
-
     const accessLevel = this.reflector.get<number>(
       ACCESS_LEVEL_KEY,
       context.getHandler(), // leer el decorador de la ruta
@@ -43,8 +37,9 @@ export class AccessLevelGuard implements CanActivate {
 
     const { roleUser, idUser } = request;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-    if (roleUser === ROLES.ADMIN) return true;
+    //si soy admin o creador paso siempre
+    if (ROLES[roleUser] === ROLES.ADMIN || ROLES[roleUser] === ROLES.CREATOR)
+      return true;
 
     const user = await this.userService.findUserById(idUser);
 
@@ -62,8 +57,11 @@ export class AccessLevelGuard implements CanActivate {
       throw new UnauthorizedException("You don't belong to this project");
 
     //con el decorador @AccessLevel verifico si el nivel de acceso del usuario es suficiente para acceder al endpoint
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-    if (accessLevel !== userExistsInProject.accessLevel) {
+
+    if (
+      ACCESS_LEVEL[accessLevel] !==
+      ACCESS_LEVEL[userExistsInProject.accessLevel]
+    ) {
       throw new UnauthorizedException(
         "You don't have the necessary access level for this endpoint",
       );

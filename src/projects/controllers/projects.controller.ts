@@ -15,6 +15,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { AccessLevel } from 'src/auth/decorators/access-level.decorator';
 
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('projects')
 @UseGuards(AuthGuard, RolesGuard, AccessLevelGuard) //controlar quien tiene acceso a los endpoints
@@ -32,6 +33,7 @@ export class ProjectsController {
     return await this.projectsService.findProjectById(id);
   }
 
+  @Roles('CREATOR')
   @Post()
   async createProject(@Body() createProjectDto: CreateProjectDto) {
     return await this.projectsService.createProject(createProjectDto);
