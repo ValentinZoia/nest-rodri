@@ -4,12 +4,14 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskDto, UpdateTaskDto } from '../dto/task.dto';
 import { ErrorManager } from 'src/utils/error.manager';
+import { ProjectsService } from 'src/projects/services/projects.service';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectRepository(TaskEntity)
     private readonly taskRepository: Repository<TaskEntity>,
+    private readonly projectsService: ProjectsService,
   ) {}
 
   async findAllTasks(): Promise<TaskEntity[]> {
@@ -66,10 +68,24 @@ export class TasksService {
   //     }
   //   }
 
-  async createTask(task: CreateTaskDto): Promise<TaskEntity> {
+  async createTask(
+    task: CreateTaskDto,
+    projectId: string,
+  ): Promise<TaskEntity> {
     try {
-      //  Guardar
-      return await this.taskRepository.save(task);
+      const project = await this.projectsService.findProjectById(projectId);
+
+      if (project === undefined) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: 'Project not found',
+        });
+      }
+
+      return await this.taskRepository.save({
+        ...task,
+        project,
+      });
     } catch (error) {
       // eslint-disable-next-line  @typescript-eslint/no-unsafe-member-access, @typescript-eslint/only-throw-error
       throw ErrorManager.createSignatureError(error.message);
