@@ -10,6 +10,7 @@ export class AuthController {
   @Post('/login')
   async login(@Body() createAuthDto: CreateAuthDto) {
     const { username, password } = createAuthDto;
+
     const user = await this.authService.validateUser(username, password);
     if (!user) {
       throw new UnauthorizedException('Data not valid');

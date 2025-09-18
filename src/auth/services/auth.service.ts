@@ -6,7 +6,7 @@ import { JwtAdapter } from 'src/utils/jwt.adapter';
 import { PayloadToken } from '../interfaces/auth.interface';
 import { UserEntity } from 'src/users/entities/users.entity';
 type CompareFunction = (password: string, hashed: string) => boolean;
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(
@@ -22,10 +22,12 @@ export class AuthService {
         key: 'username',
         value: username,
       });
-      console.log(userByUsername);
-      if (userByUsername) {
-        const match = this.comparePassword(password, userByUsername.password);
 
+      if (userByUsername) {
+        // const match = this.comparePassword(password, userByUsername.password);
+        console.log(password);
+        const match = await bcrypt.compare(password, userByUsername.password);
+        console.log(match);
         if (match) return userByUsername;
       }
 
@@ -36,6 +38,7 @@ export class AuthService {
 
       if (userByEmail) {
         const match = this.comparePassword(password, userByEmail.password);
+        console.log(match);
         if (match) return userByEmail;
       }
 

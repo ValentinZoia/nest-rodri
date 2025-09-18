@@ -13,12 +13,15 @@ import { CreateUserDto, UpdateUserDto } from '../dto/user.dto';
 import { CreateUserProjectDto } from '../dto/userProject.dto';
 import { PublicAccess } from 'src/auth/decorators/public.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('users')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Roles('ADMIN') //solo los admins pueden acceder
   @Get()
   async findAllUsers() {
     return await this.usersService.findAllUsers();
