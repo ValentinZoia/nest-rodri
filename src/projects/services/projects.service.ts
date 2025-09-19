@@ -7,6 +7,7 @@ import { CreateProjectDto, UpdateProjectDto } from '../dtos/project.dto';
 import { UsersProjectsEntity } from 'src/users/entities/usersProjects.entity';
 import { UsersService } from 'src/users/services/users.service';
 import { ACCESS_LEVEL } from 'src/constants/roles';
+import { HttpCustomService } from 'src/providers/http/http.service';
 
 @Injectable()
 export class ProjectsService {
@@ -17,7 +18,7 @@ export class ProjectsService {
     @InjectRepository(UsersProjectsEntity)
     private readonly userProjectRepository: Repository<UsersProjectsEntity>,
     private readonly usersService: UsersService,
-    // private readonly httpService: HttpCustomService
+    private readonly httpService: HttpCustomService,
   ) {}
 
   async findAllProjects(): Promise<ProjectEntity[]> {
@@ -99,5 +100,10 @@ export class ProjectsService {
       // eslint-disable-next-line  @typescript-eslint/no-unsafe-member-access, @typescript-eslint/only-throw-error
       throw ErrorManager.createSignatureError(error.message);
     }
+  }
+
+  async listApi() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this.httpService.apiFindAll();
   }
 }

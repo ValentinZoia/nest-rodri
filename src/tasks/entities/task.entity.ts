@@ -1,6 +1,6 @@
-import { BaseEntity } from 'src/config/base.entity';
-import { STATUS_TASK } from 'src/constants/status-task';
-import { ProjectEntity } from 'src/projects/entities/project.entity';
+import { BaseEntity } from '../../config/base.entity';
+import { STATUS_TASK } from '../../constants/status-task';
+import { ProjectEntity } from '../../projects/entities/project.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity({ name: 'tasks' })

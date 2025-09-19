@@ -16,6 +16,7 @@ import { AccessLevel } from 'src/auth/decorators/access-level.decorator';
 
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { PublicAccess } from 'src/auth/decorators/public.decorator';
 
 @Controller('projects')
 @UseGuards(AuthGuard, RolesGuard, AccessLevelGuard) //controlar quien tiene acceso a los endpoints
@@ -27,19 +28,23 @@ export class ProjectsController {
     return await this.projectsService.findAllProjects();
   }
 
-  @AccessLevel(50) //todas las personas que tengan un nivel de acceso  igual a 50 pueden acceder
+  @AccessLevel('OWNER') //todas las personas que tengan un nivel de acceso  igual a 50 pueden acceder
   @Get(':projectId')
   async findProjectById(@Param('projectId') id: string) {
     return await this.projectsService.findProjectById(id);
   }
 
   @Roles('CREATOR')
-  @Post()
-  async createProject(@Body() createProjectDto: CreateProjectDto) {
-    return await this.projectsService.createProject(createProjectDto);
+  @Post('create/useOwner/:userId')
+  async createProject(
+    @Body() createProjectDto: CreateProjectDto,
+    @Param('userId') userId: string,
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return await this.projectsService.createProject(createProjectDto, userId);
   }
 
-  @AccessLevel(50) //todas las personas que tengan un nivel de acceso  igual a 50 pueden acceder
+  @AccessLevel('OWNER') //todas las personas que tengan un nivel de acceso  igual a 50 pueden acceder
   @Put(':projectId')
   async updateProject(
     @Param('projectId') id: string,
@@ -62,5 +67,12 @@ export class ProjectsController {
       message: 'Project deleted successfully',
       result,
     };
+  }
+
+  @PublicAccess()
+  @Get('list/api')
+  public async listApi() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this.projectsService.listApi();
   }
 }

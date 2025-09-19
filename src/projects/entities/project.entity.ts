@@ -1,4 +1,4 @@
-import { TaskEntity } from 'src/tasks/entities/task.entity';
+import { TaskEntity } from '../../tasks/entities/task.entity';
 import { BaseEntity } from '../../config/base.entity';
 import { IProject } from '../../interfaces/project.interface';
 import { UsersProjectsEntity } from '../../users/entities/usersProjects.entity';
