@@ -25,6 +25,37 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## 📌 Project Description
+This project is a backend application built with NestJS that implements a role-based authentication and authorization system using JWT. It demonstrates how to design and structure a real-world backend with clean architecture principles, leveraging TypeORM for database management and migrations.
+
+The application manages three main entities:
+
+- Users – Registered members who can authenticate and access the system.
+- Projects – Collaborative spaces that group users with different access levels.
+- Tasks – Work items associated with projects, assigned to users and tracked through different statuses.
+
+### 🔐 Authentication & Authorization
+
+- JWT authentication for secure login and protected routes.
+- Role and access level guards to enforce authorization rules at the route and service level.
+- User–Project relationships handled with an access level enum (30, 40, 50), defining permissions.
+
+### 🗄️ Database & Entities
+
+- PostgreSQL database with TypeORM migrations.
+- Example: tasks table with enum status (CREATED, IN_PROGRESS, FINISH).
+- Proper relations between users, projects, and tasks.
+- Database constraints and foreign keys ensure integrity.
+
+### 🚀 Why this project?
+
+This project highlights:
+
+- Strong knowledge of NestJS modules, providers, and guards.
+- Practical use of TypeORM with enums, relations, and migrations.
+- Implementation of secure and scalable authentication & authorization patterns.
+- Ability to design a backend system that could serve as the foundation for a project management tool (similar to Jira/Trello).
+
 ## Project setup
 
 ```bash
